@@ -11,6 +11,8 @@ public class logicaJuego {
     private int turnoActual;
     private int totalJugadores;
     boolean juegoAcabado = false;
+    private int direccionTurno = 1; // 1 para adelante, -1 para atrás (por el efecto de "Reversa")
+    private boolean saltoTurno = false; // Para cartas de "Salto"
 
     public logicaJuego(int numJugadores) {
         mazo = new mazoCartas();
@@ -18,9 +20,8 @@ public class logicaJuego {
         totalJugadores = numJugadores;
         turnoActual = 0;
 
-        // Verificamos que la lista de jugadores se esté poblando correctamente
         for (int i = 0; i < totalJugadores; i++) {
-            jugadoresList.add(new jugadores(mazo, totalJugadores));  // Crear jugador con el número de jugadores
+            jugadoresList.add(new jugadores(mazo, totalJugadores));
         }
 
         Carta cartaInicial = mazo.sacarCarta();
@@ -35,6 +36,7 @@ public class logicaJuego {
     }
 
     public void iniciar() {
+
         while (!juegoAcabado) {
             jugadores jugador = jugadoresList.get(turnoActual);
             mano manoJugador = jugador.getMano();
@@ -74,30 +76,39 @@ public class logicaJuego {
                         case 1:
                             mostrarCartasConIndices(manoJugador);
                             System.out.print("Selecciona el índice de la carta que quieres tirar: ");
-                            int indice = scanner.nextInt();
+                            try {
+                                int indice = scanner.nextInt();
+                                scanner.nextLine(); // Limpiar buffer
 
-                            if (indice >= 0 && indice < manoJugador.getCartas().size()) {
-                                Carta seleccionada = manoJugador.getCartas().get(indice);
+                                if (indice >= 0 && indice < manoJugador.getCartas().size()) {
+                                    Carta seleccionada = manoJugador.getCartas().get(indice);
 
-                                if (esCartaJugable(seleccionada)) {
-                                    tablero.setCartaEnJuego(seleccionada);
-                                    manoJugador.getCartas().remove(indice);
-                                    System.out.println("Tiraste: " + seleccionada);
+                                    if (esCartaJugable(seleccionada)) {
+                                        tablero.setCartaEnJuego(seleccionada);
+                                        manoJugador.getCartas().remove(indice);
+                                        System.out.println("Tiraste: " + seleccionada);
 
-                                    if (jugador.sinCartas()) {
-                                        System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
-                                        return;
+                                        // Manejar cartas especiales
+                                        if (seleccionada.esEspecial()) {
+                                            manejarCartaEspecial(seleccionada);
+                                        }
+
+                                        if (jugador.sinCartas()) {
+                                            System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
+                                            return;
+                                        }
+                                        cartaJugada = true;
+                                    } else {
+                                        System.out.println("Índice inválido.");
                                     }
-
-                                    cartaJugada = true;
                                 } else {
-                                    System.out.println("Esa carta no se puede jugar.");
+                                    System.out.println("Índice inválido.");
                                 }
-                            } else {
-                                System.out.println("Índice inválido.");
+                            } catch (Exception e) {
+                                System.out.println("Entrada inválida. Introduce un número.");
+                                scanner.nextLine(); // Limpiar buffer
                             }
                             break;
-
                         case 2:
                             System.out.println("Solo puedes robar si no tienes cartas jugables.");
                             break;
@@ -108,7 +119,7 @@ public class logicaJuego {
                 }
             }
 
-            turnoActual = (turnoActual + 1) % totalJugadores;
+            avanzarTurno();
             procesosExtras();
         }
     }
@@ -123,7 +134,16 @@ public class logicaJuego {
 
     private boolean esCartaJugable(Carta carta) {
         Carta actual = tablero.getCartaEnJuego();
-        return carta.getColor().equals(actual.getColor()) || carta.getValor() == actual.getValor();
+
+        // Los comodines siempre se pueden jugar
+        if (carta.getTipoEspecial().equals("COMODIN") || carta.getTipoEspecial().equals("+4")) {
+            return true;
+        }
+
+        // Coincidencia de color o valor
+        return carta.getColor().equals(actual.getColor()) ||
+                carta.getValor() == actual.getValor() ||
+                (carta.esEspecial() && carta.getTipoEspecial().equals(actual.getTipoEspecial()));
     }
 
     private boolean hayCartaJugable(mano manoJugador) {
@@ -153,6 +173,91 @@ public class logicaJuego {
         return carta.getValor() == 10 || carta.getValor() == 11 || carta.getValor() == 12 || carta.getValor() == 13 || carta.getValor() == 14;
     }
 
+    private void manejarCartaEspecial(Carta carta) {
+        switch(carta.getTipoEspecial()) {
+            case "+2":
+                jugadorSiguienteRoba(2);
+                System.out.println("¡El siguiente jugador roba 2 cartas!");
+                break;
+
+            case "REVERSA":
+                direccionTurno *= -1;
+                System.out.println("¡El sentido del juego ha cambiado!");
+                break;
+
+            case "SALTAR":
+                saltoTurno = true;
+                System.out.println("¡El siguiente jugador pierde su turno!");
+                break;
+
+            case "COMODIN":
+            case "+4":
+                cambiarColor(carta);
+                jugadorSiguienteRoba(4);
+                System.out.println("¡El siguiente jugador roba 4 cartas!");
+                try { Thread.sleep(1500); } catch (InterruptedException e) {}
+                break;
+        }
+    }
+
+    private void jugadorSiguienteRoba(int cantidad) {
+        int siguiente = (turnoActual + direccionTurno + totalJugadores) % totalJugadores;
+        for (int i = 0; i < cantidad; i++) {
+            Carta robada = mazo.sacarCarta();
+            if (robada != null) {
+                jugadoresList.get(siguiente).getMano().getCartas().add(robada);
+            }
+        }
+    }
+
+    private void avanzarTurno() {
+        if (saltoTurno) {
+            turnoActual = (turnoActual + direccionTurno * 2 + totalJugadores) % totalJugadores;
+            saltoTurno = false;
+        } else {
+            turnoActual = (turnoActual + direccionTurno + totalJugadores) % totalJugadores;
+        }
+    }
+
+    private void cambiarColor(Carta carta) {
+        if (carta.getTipoEspecial().equals("COMODIN") || carta.getTipoEspecial().equals("+4")) {
+            int opcion;
+            boolean entradaValida = false;
+
+            // Mostrar menú
+            System.out.println("Elige un color:");
+            System.out.println("1. Rojo \uD83D\uDD34");
+            System.out.println("2. Verde \uD83D\uDFE9");
+            System.out.println("3. Azul \uD83D\uDD35");
+            System.out.println("4. Amarillo \uD83D\uDD36");
+
+            // Validar entrada
+            while (!entradaValida) {
+                try {
+                    opcion = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar buffer
+
+                    if (opcion >= 1 && opcion <= 4) {
+                        entradaValida = true;
+                        String nuevoColor = "";
+                        switch(opcion) {
+                            case 1: nuevoColor = "\uD83D\uDD34"; break;
+                            case 2: nuevoColor = "\uD83D\uDFE9"; break;
+                            case 3: nuevoColor = "\uD83D\uDD35"; break;
+                            case 4: nuevoColor = "\uD83D\uDD36"; break;
+                        }
+                        carta.setColor(nuevoColor);
+                        System.out.println("El nuevo color es: " + nuevoColor);
+                    } else {
+                        System.out.println("Opción inválida. Elige del 1 al 4:");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Entrada inválida. Introduce un número del 1 al 4:");
+                    scanner.nextLine(); // Limpiar buffer en caso de error
+                }
+            }
+        }
+    }
 
     public void procesosExtras() {
         try {

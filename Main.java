@@ -2,6 +2,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        int numJugadores;
+        int opcionJugar;
         System.out.println("\n" +
                 "          _____                    _____                  _______         \n" +
                 "         /\\    \\                  /\\    \\                /::\\    \\        \n" +
@@ -22,16 +24,27 @@ public class Main {
                 "     \\::::::::/    /              |::::/    /          \\::::::/    /      \n" +
                 "      \\::::::/    /               /:::/    /            \\::::/    /       \n" +
                 "       \\::::/    /               /:::/    /              \\::/____/        \n" +
-                "        \\::/____/                \\::/    /                ~~              \n" +
-                "         ~~                       \\/____/                                 \n" +
-                "                                                                          \n\n\n\nPractica realizada por: Derek Ramón Garzón Vizcarra\n\nIngrese el numero de jugadores:");
-        int numJugadores = sc.nextInt();
-        // Verificamos si hay al menos 2 jugadores
-        while (numJugadores < 2) {
-            System.out.println("Debe haber al menos 2 jugadores. Ingrese un número válido:");
-            numJugadores = sc.nextInt();  // Leemos de nuevo el numero si es invalido
+                "        \\::/____/                \\::/    /                --              \n" +
+                "         --                       \\/____/                                 \n" +
+                "                                                                          \n\n\n\nPractica realizada por: Derek Ramón Garzón Vizcarra");
+        System.out.println("Seleccione una opción: \n 1.- Jugar \n 2.- Salir\n");
+        opcionJugar = sc.nextInt();
+        while (opcionJugar != 1 && opcionJugar != 2) {
+            System.out.println("Opción no valida: Escriba el numero de una de las dos opciones");
         }
-        logicaJuego Uno = new logicaJuego(2);
-        Uno.iniciar();
+        if (opcionJugar == 1) {
+            System.out.println("Ingrese el numero de jugadores");
+            numJugadores = sc.nextInt();
+            // Verificamos si hay al menos 2 jugadores
+            while (numJugadores < 2) {
+                System.out.println("Debe haber al menos 2 jugadores. Ingrese un número válido:");
+                numJugadores = sc.nextInt();  // Leemos de nuevo el numero si es invalido
+            }
+            logicaJuego Uno = new logicaJuego(numJugadores);
+            Uno.iniciar();
+        } else {
+            System.out.println("Saliendo del juego...");
+        }
+
     }
 }

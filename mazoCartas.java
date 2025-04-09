@@ -22,19 +22,19 @@ public class mazoCartas {
             }
         }
 
-        // Cartas especiales (+2, reversa, bloqueo)
+        // Cartas especiales con color (+2, reversa, saltar)
         for (String color : colores) {
             for (int i = 0; i < 2; i++) {
-                cartas.add(new Carta("+2", 10)); // +2
-                cartas.add(new Carta("\uD83D\uDD04", 11)); // Reversa
-                cartas.add(new Carta("\uD83D\uDEAB", 12)); // Bloqueo
+                cartas.add(new Carta(color, 10)); // +2
+                cartas.add(new Carta(color, 11)); // Reversa
+                cartas.add(new Carta(color, 12)); // Saltar
             }
         }
 
-        // Cartas comodín (cambio de color y +4)
+        // Cartas comodín (sin color)
         for (int i = 0; i < 4; i++) {
-            cartas.add(new Carta("\uD83D\uDD04", 13)); // Comodín de cambio de color
-            cartas.add(new Carta("+4", 14)); // Comodín +4
+            cartas.add(new Carta("NEGRO", 13)); // Comodín normal
+            cartas.add(new Carta("NEGRO", 14)); // Comodín +4
         }
     }
 

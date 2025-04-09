@@ -5,7 +5,7 @@ public class jugadores {
     private mano manoJugador;
 
     public jugadores(mazoCartas mazoCompartido, int totalJugadores) {
-        int numCartas = totalJugadores < 2 ? 5 : 7;
+        int numCartas = 7;
         this.manoJugador = new mano(mazoCompartido, numCartas);
     }
 
