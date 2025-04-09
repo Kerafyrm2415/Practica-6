@@ -31,6 +31,7 @@ public class Main {
         opcionJugar = sc.nextInt();
         while (opcionJugar != 1 && opcionJugar != 2) {
             System.out.println("Opción no valida: Escriba el numero de una de las dos opciones");
+            opcionJugar = sc.nextInt();
         }
         if (opcionJugar == 1) {
             System.out.println("Ingrese el numero de jugadores");
@@ -41,6 +42,7 @@ public class Main {
                 numJugadores = sc.nextInt();  // Leemos de nuevo el numero si es invalido
             }
             logicaJuego Uno = new logicaJuego(numJugadores);
+            Uno.limpiarPantalla();
             Uno.iniciar();
         } else {
             System.out.println("Saliendo del juego...");

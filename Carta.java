@@ -47,7 +47,7 @@ public class Carta {
     public String toString() {
         if (esEspecial()) {
             if (tipoEspecial.equals("COMODIN") || tipoEspecial.equals("+4")) {
-                return tipoEspecial;
+                return color + tipoEspecial;
             }
             return color + " " + tipoEspecial;
         }

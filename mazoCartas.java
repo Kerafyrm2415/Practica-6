@@ -33,8 +33,8 @@ public class mazoCartas {
 
         // Cartas comodín (sin color)
         for (int i = 0; i < 4; i++) {
-            cartas.add(new Carta("NEGRO", 13)); // Comodín normal
-            cartas.add(new Carta("NEGRO", 14)); // Comodín +4
+            cartas.add(new Carta("⬜", 13)); // Comodín normal
+            cartas.add(new Carta("⬜", 14)); // Comodín +4
         }
     }
 

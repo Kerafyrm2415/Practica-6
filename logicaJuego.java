@@ -55,69 +55,77 @@ public class logicaJuego {
                 juegoAcabado = true;
             }
                 boolean cartaJugada = false;
-
                 while (!cartaJugada) {
                     System.out.println("\n1. Jugar Carta");
-                    if (!hayCartaJugable(manoJugador)) {
-                        System.out.println("2. Robar Carta");
-                    }
+                    System.out.println("2. Robar Carta (Solo se puede usar si no tienes cartas jugables)");
                     System.out.print("Elige una opción: ");
                     int opcion = scanner.nextInt();
-
-                    switch (opcion) {
-                        case 1:
-                            mostrarCartasConIndices(manoJugador);
-                            System.out.print("Selecciona el índice de la carta que quieres tirar: ");
-                            try {
-                                int indice = scanner.nextInt();
-                                scanner.nextLine(); // Limpiar buffer
-
-                                if (indice >= 0 && indice < manoJugador.getCartas().size()) {
-                                    Carta seleccionada = manoJugador.getCartas().get(indice);
-
-                                    if (esCartaJugable(seleccionada)) {
-                                        tablero.setCartaEnJuego(seleccionada);
-                                        manoJugador.getCartas().remove(indice);
-                                        System.out.println("Tiraste: " + seleccionada);
-
-                                        // Manejar cartas especiales
-                                        if (seleccionada.esEspecial()) {
-                                            manejarCartaEspecial(seleccionada);
-                                        }
-
-                                        if (jugador.sinCartas()) {
-                                            System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
-                                            return;
-                                        }
-                                        cartaJugada = true;
-                                    } else {
-                                        System.out.println("Índice inválido.");
-                                    }
+                    limpiarPantalla();
+                        switch (opcion) {
+                            case 1:
+                                if (!hayCartaJugable(manoJugador)) {
+                                    System.out.println("\nNo tienes cartas jugables, roba una carta");
+                                    System.out.println("Este es tu mazo actual");
+                                    mostrarCartas(manoJugador);
                                 } else {
-                                    System.out.println("Índice inválido.");
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Entrada inválida. Introduce un número.");
-                                scanner.nextLine(); // Limpiar buffer
-                            }
-                            break;
-                        case 2:
-                            System.out.println("Solo puedes robar si no tienes cartas jugables.");
-                            break;
-                        default:
-                            System.out.println("Opción inválida.");
-                    }
-                }
-            }
+                                    tablero.mostrarCartaEnJuego();
+                                    mostrarCartasConIndices(manoJugador);
+                                    System.out.print("Selecciona el índice de la carta que quieres tirar: ");
+                                    try {
+                                        int indice = scanner.nextInt();
+                                        scanner.nextLine(); // Limpiar buffer
 
-            // Solo avanzar el turno si no es un salto
-        if (!saltoTurno) {
-            avanzarTurnoBasico();
-        } else {
-            // Para saltos, el avance especial ya se hizo al jugar la carta
-            saltoTurno = false;
-        }
-            procesosExtras();
+                                        if (indice >= 0 && indice < manoJugador.getCartas().size()) {
+                                            Carta seleccionada = manoJugador.getCartas().get(indice);
+
+                                            if (esCartaJugable(seleccionada)) {
+                                                tablero.setCartaEnJuego(seleccionada);
+                                                manoJugador.getCartas().remove(indice);
+                                                System.out.println("Tiraste: " + seleccionada);
+
+                                                // Manejar cartas especiales
+                                                if (seleccionada.esEspecial()) {
+                                                    manejarCartaEspecial(seleccionada);
+                                                }
+                                                if (jugador.tieneUnaCarta()) {
+                                                    System.out.println("UNO!");
+                                                }
+                                                if (jugador.sinCartas()) {
+                                                    System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
+                                                    return;
+                                                }
+                                                cartaJugada = true;
+                                            } else {
+                                                System.out.println("Índice inválido.");
+                                            }
+                                        } else {
+                                            System.out.println("Índice inválido.");
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println("Entrada inválida. Introduce un número.");
+                                        scanner.nextLine(); // Limpiar buffer
+                                    }
+                                }
+                                break;
+
+                            case 2:
+                                if (!hayCartaJugable(manoJugador)) {
+                                    robarHastaQueSePuedaJugar(manoJugador);
+                                    cartaJugada = true;
+                                } else {
+                                    System.out.println("Aún tienes cartas jugables. No puedes robar.");
+                                }
+                                break;
+                            case 42:
+                                System.out.println("SALTO DE TURNO");
+                                break;
+                            default:
+                                System.out.println("Opción inválida.");
+                        }
+                    }
+                    avanzarTurno();
+                    esperarTrasTurno();
+                }
     }
 
     private void mostrarCartasConIndices(mano manoJugador) {
@@ -125,6 +133,11 @@ public class logicaJuego {
         for (Carta carta : manoJugador.getCartas()) {
             System.out.println(i + ": " + carta);
             i++;
+        }
+    }
+    private void mostrarCartas(mano manoJugador) {
+        for (Carta carta : manoJugador.getCartas()) {
+            System.out.println(carta);
         }
     }
 
@@ -165,6 +178,15 @@ public class logicaJuego {
                 manoJugador.getCartas().add(nueva);
 
                 if (esCartaJugable(nueva)) {
+                    System.out.println("La carta robada es jugable, se jugará automáticamente.");
+                    manoJugador.getCartas().remove(nueva);
+                    tablero.setCartaEnJuego(nueva);
+                    System.out.println("Tiraste: " + nueva);
+
+                    if (nueva.esEspecial()) {
+                        manejarCartaEspecial(nueva);
+                    }
+
                     seEncontroCarta = true;
                 }
             } catch (InterruptedException e) {
@@ -173,9 +195,6 @@ public class logicaJuego {
         }
     }
 
-    private void avanzarTurnoBasico() {
-        turnoActual = (turnoActual + direccionTurno + totalJugadores) % totalJugadores;
-    }
 
     private boolean esCartaEspecial(Carta carta) {
         return carta.getValor() == 10 || carta.getValor() == 11 || carta.getValor() == 12 || carta.getValor() == 13 || carta.getValor() == 14;
@@ -186,6 +205,7 @@ public class logicaJuego {
             case "+2":
                 jugadorSiguienteRoba(2);
                 System.out.println("¡El siguiente jugador roba 2 cartas!");
+                saltoTurno = true;
                 break;
 
             case "REVERSA":
@@ -205,6 +225,7 @@ public class logicaJuego {
                 if (carta.getTipoEspecial().equals("+4")) {
                     jugadorSiguienteRoba(4);
                     System.out.println("¡El siguiente jugador roba 4 cartas!");
+                    saltoTurno = true;
                 }
                 break;
         }
@@ -225,20 +246,16 @@ public class logicaJuego {
     }
 
     private void avanzarTurno() {
-        int jugadorAnterior = turnoActual + 1; // +1 porque los jugadores se numeran desde 1
-
         if (saltoTurno) {
             turnoActual = (turnoActual + direccionTurno * 2 + totalJugadores) % totalJugadores;
             saltoTurno = false;
-            System.out.println("\n¡Turno saltado! Ahora es el turno del Jugador " + (turnoActual + 1));
         } else {
             turnoActual = (turnoActual + direccionTurno + totalJugadores) % totalJugadores;
         }
 
         // Limpiar pantalla y mostrar mensaje de cambio de turno
-        procesosExtras();
-        System.out.println("Turno del Jugador " + (turnoActual + 1) +
-                " (anterior: Jugador " + jugadorAnterior + ")");
+        esperarTrasTurno();
+        limpiarPantalla();
     }
 
     private void cambiarColor(Carta carta) {
@@ -281,13 +298,20 @@ public class logicaJuego {
         }
     }
 
-    public void procesosExtras() {
+    public void esperarTrasTurno() {
         try {
             Thread.sleep(1250);
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("No se pudo limpiar la pantalla.");
+        }
+    }
+    public void limpiarPantalla() {
+        try {
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+        } catch (Exception e) {
+            System.out.println("Error al limpiar Pantalla.");
         }
     }
 }
