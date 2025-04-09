@@ -1,16 +1,37 @@
+import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
-        mazoCartas mazo = new mazoCartas();
-        mano manoJugador = new mano(mazo);
-        jugadores jugador1 = new jugadores(1);
-//        System.out.println("Cartas del mazo generadas: ");
-//        while (mazo.getCantidadCartas() > 0) {
-//            Carta carta = mazo.robarCarta();
-//            if (carta != null) {
-//                System.out.println(carta.toString());
-//            } else {
-//                System.out.println("El mazo esta vacio");
-//            }
-//        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n" +
+                "          _____                    _____                  _______         \n" +
+                "         /\\    \\                  /\\    \\                /::\\    \\        \n" +
+                "        /::\\____\\                /::\\____\\              /::::\\    \\       \n" +
+                "       /:::/    /               /::::|   |             /::::::\\    \\      \n" +
+                "      /:::/    /               /:::::|   |            /::::::::\\    \\     \n" +
+                "     /:::/    /               /::::::|   |           /:::/~~\\:::\\    \\    \n" +
+                "    /:::/    /               /:::/|::|   |          /:::/    \\:::\\    \\   \n" +
+                "   /:::/    /               /:::/ |::|   |         /:::/    / \\:::\\    \\  \n" +
+                "  /:::/    /      _____    /:::/  |::|   | _____  /:::/____/   \\:::\\____\\ \n" +
+                " /:::/____/      /\\    \\  /:::/   |::|   |/\\    \\|:::|    |     |:::|    |\n" +
+                "|:::|    /      /::\\____\\/:: /    |::|   /::\\____\\:::|____|     |:::|    |\n" +
+                "|:::|____\\     /:::/    /\\::/    /|::|  /:::/    /\\:::\\    \\   /:::/    / \n" +
+                " \\:::\\    \\   /:::/    /  \\/____/ |::| /:::/    /  \\:::\\    \\ /:::/    /  \n" +
+                "  \\:::\\    \\ /:::/    /           |::|/:::/    /    \\:::\\    /:::/    /   \n" +
+                "   \\:::\\    /:::/    /            |::::::/    /      \\:::\\__/:::/    /    \n" +
+                "    \\:::\\__/:::/    /             |:::::/    /        \\::::::::/    /     \n" +
+                "     \\::::::::/    /              |::::/    /          \\::::::/    /      \n" +
+                "      \\::::::/    /               /:::/    /            \\::::/    /       \n" +
+                "       \\::::/    /               /:::/    /              \\::/____/        \n" +
+                "        \\::/____/                \\::/    /                ~~              \n" +
+                "         ~~                       \\/____/                                 \n" +
+                "                                                                          \n\n\n\nPractica realizada por: Derek Ramón Garzón Vizcarra\n\nIngrese el numero de jugadores:");
+        int numJugadores = sc.nextInt();
+        // Verificamos si hay al menos 2 jugadores
+        while (numJugadores < 2) {
+            System.out.println("Debe haber al menos 2 jugadores. Ingrese un número válido:");
+            numJugadores = sc.nextInt();  // Leemos de nuevo el numero si es invalido
+        }
+        logicaJuego Uno = new logicaJuego(2);
+        Uno.iniciar();
     }
 }

@@ -3,20 +3,21 @@ import java.util.List;
 
 public class jugadores {
     private mano manoJugador;
-    private mazoCartas mazoJugador;
 
-    public jugadores(int totalJugadores) {
-        mazoJugador = new mazoCartas();
-        int numCartas = 0;
-        if (totalJugadores < 2){
-            manoJugador = new mano(mazoJugador, 5);
-        } else {
-            manoJugador = new mano(mazoJugador, 7);
-        }
-        mostrarMazoJugador(manoJugador);
+    public jugadores(mazoCartas mazoCompartido, int totalJugadores) {
+        int numCartas = totalJugadores < 2 ? 5 : 7;
+        this.manoJugador = new mano(mazoCompartido, numCartas);
     }
 
-    public void mostrarMazoJugador(mano jugador1) {
+    public mano getMano() {
+        return manoJugador;
+    }
+
+    public boolean sinCartas() {
+        return manoJugador.getCartas().isEmpty();
+    }
+
+    public void mostrarMazoJugador() {
         System.out.println("Mano del jugador: ");
         manoJugador.mostrarMano();
     }

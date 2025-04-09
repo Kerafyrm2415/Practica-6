@@ -28,4 +28,8 @@ public class mano {
             System.out.println(carta);
         }
     }
+
+    public List<Carta> getCartas() {
+        return mano;
+    }
 }

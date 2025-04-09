@@ -38,6 +38,13 @@ public class mazoCartas {
         }
     }
 
+    public void mostrarCartasRestantes() {
+        System.out.println("\nCartas restantes en el mazo (" + cartas.size() + "):");
+        for (Carta carta : cartas) {
+            System.out.println(carta);
+        }
+    }
+
     public void barajearMazo() {
         Collections.shuffle(cartas);
     }
@@ -52,5 +59,9 @@ public class mazoCartas {
 
     public List<Carta> getCartas() {
         return cartas;
+    }
+    public void devolverCarta(Carta carta) {
+        cartas.add(carta);  // Simplemente agregamos la carta de vuelta al mazo
+        barajearMazo();     // Rebarajamos el mazo para no tener la carta en un orden predecible
     }
 }
