@@ -4,15 +4,15 @@ import java.util.List;
 
 public class mazoCartas {
     private List<Carta> cartas;
-    private static final String[] colores = {"Rojo", "Verde", "Azul", "Amarillo"};
+    private static final String[] colores = {"\uD83D\uDD34", "\uD83D\uDFE9", "\uD83D\uDD35", "\uD83D\uDD36"};
 
     public mazoCartas() {
         cartas = new ArrayList<>();
-        generarCartas();
-        barajar();
+        crearMazo();
+        barajearMazo();
     }
 
-    private void generarCartas() {
+    private void crearMazo() {
         // Cartas numéricas (0-9)
         for (String color : colores) {
             cartas.add(new Carta(color, 0)); // Solo hay un 0 por color
@@ -25,24 +25,24 @@ public class mazoCartas {
         // Cartas especiales (+2, reversa, bloqueo)
         for (String color : colores) {
             for (int i = 0; i < 2; i++) {
-                cartas.add(new Carta(color, 10)); // +2
-                cartas.add(new Carta(color, 11)); // Reversa
-                cartas.add(new Carta(color, 12)); // Bloqueo
+                cartas.add(new Carta("+2", 10)); // +2
+                cartas.add(new Carta("\uD83D\uDD04", 11)); // Reversa
+                cartas.add(new Carta("\uD83D\uDEAB", 12)); // Bloqueo
             }
         }
 
         // Cartas comodín (cambio de color y +4)
         for (int i = 0; i < 4; i++) {
-            cartas.add(new Carta("Negro", 13)); // Comodín de cambio de color
-            cartas.add(new Carta("Negro", 14)); // Comodín +4
+            cartas.add(new Carta("\uD83D\uDD04", 13)); // Comodín de cambio de color
+            cartas.add(new Carta("+4", 14)); // Comodín +4
         }
     }
 
-    public void barajar() {
+    public void barajearMazo() {
         Collections.shuffle(cartas);
     }
 
-    public Carta robarCarta() {
+    public Carta sacarCarta() {
         return cartas.isEmpty() ? null : cartas.remove(0);
     }
 

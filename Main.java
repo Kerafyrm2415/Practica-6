@@ -2,6 +2,7 @@ public class Main {
     public static void main(String[] args) {
         mazoCartas mazo = new mazoCartas();
         mano manoJugador = new mano(mazo);
+        jugadores jugador1 = new jugadores(1);
 //        System.out.println("Cartas del mazo generadas: ");
 //        while (mazo.getCantidadCartas() > 0) {
 //            Carta carta = mazo.robarCarta();

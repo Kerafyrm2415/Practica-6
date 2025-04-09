@@ -7,12 +7,16 @@ public class mano {
     public mano(mazoCartas mazo) {
         mano = new ArrayList<>();
         robarCartas(mazo, 7);
-        mostrarMano();
+        // mostrarMano();
     }
 
+    public mano(mazoCartas mazo, int numJugadores) {
+        mano = new ArrayList<>();
+        robarCartas(mazo, numJugadores);
+    }
     public void robarCartas(mazoCartas mazo, int cantidad) {
         for (int i = 0; i < cantidad; i++) {
-            Carta carta = mazo.robarCarta();
+            Carta carta = mazo.sacarCarta();
             if (carta != null) {
                 mano.add(carta);
             }
@@ -20,7 +24,6 @@ public class mano {
     }
 
     public void mostrarMano() {
-        System.out.println("Mano del jugador:");
         for (Carta carta : mano) {
             System.out.println(carta);
         }
