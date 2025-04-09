@@ -13,6 +13,10 @@ public class jugadores {
         return manoJugador;
     }
 
+    public boolean tieneUnaCarta() {
+        return manoJugador.getCartas().size() == 1;
+    }
+
     public boolean sinCartas() {
         return manoJugador.getCartas().isEmpty();
     }
