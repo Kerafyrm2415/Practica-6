@@ -34,11 +34,11 @@ public class Main {
             opcionJugar = sc.nextInt();
         }
         if (opcionJugar == 1) {
-            System.out.println("Ingrese el numero de jugadores");
+            System.out.println("Ingrese el numero de Jugador");
             numJugadores = sc.nextInt();
-            // Verificamos si hay al menos 2 jugadores
+            // Verificamos si hay al menos 2 Jugador
             while (numJugadores < 2) {
-                System.out.println("Debe haber al menos 2 jugadores. Ingrese un número válido:");
+                System.out.println("Debe haber al menos 2 Jugador. Ingrese un número válido:");
                 numJugadores = sc.nextInt();  // Leemos de nuevo el numero si es invalido
             }
             logicaJuego Uno = new logicaJuego(numJugadores);

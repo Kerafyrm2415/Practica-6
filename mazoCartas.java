@@ -4,7 +4,7 @@ import java.util.List;
 
 public class mazoCartas {
     private List<Carta> cartas;
-    private String[] colores = {"\uD83D\uDD34", "\uD83D\uDFE9", "\uD83D\uDD35", "\uD83D\uDD36"};
+    private String[] colores = {"\uD83D\uDD34", "\uD83D\uDFE9", "\uD83D\uDD35", "\uD83D\uDC9B"};
 
     public mazoCartas() {
         cartas = new ArrayList<>();
@@ -40,9 +40,7 @@ public class mazoCartas {
 
     public void mostrarCartasRestantes() {
         System.out.println("\nCartas restantes en el mazo (" + cartas.size() + "):");
-        for (Carta carta : cartas) {
-            System.out.println(carta);
-        }
+        cartas.forEach(System.out::println);
     }
 
     public void barajearMazo() {

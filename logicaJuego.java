@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class logicaJuego {
     private mazoCartas mazo;
-    private mano manoJugador;
+    private Mano manoJugador;
     private Tablero tablero;
     private Scanner scanner;
-    private List<jugadores> jugadoresList;
+    private List<Jugador> jugadoresList;
     private int turnoActual;
     private int totalJugadores;
     boolean juegoAcabado = false;
@@ -21,7 +21,7 @@ public class logicaJuego {
         turnoActual = 0;
 
         for (int i = 0; i < totalJugadores; i++) {
-            jugadoresList.add(new jugadores(mazo, totalJugadores));
+            jugadoresList.add(new Jugador(mazo, totalJugadores));
         }
 
         Carta cartaInicial = mazo.sacarCarta();
@@ -38,8 +38,8 @@ public class logicaJuego {
     public void iniciar() {
 
         while (!juegoAcabado) {
-            jugadores jugador = jugadoresList.get(turnoActual);
-            mano manoJugador = jugador.getMano();
+            Jugador jugador = jugadoresList.get(turnoActual);
+            Mano manoJugador = jugador.getMano();
 
             System.out.println("\n--------------------------------");
             System.out.println("Turno del Jugador " + (turnoActual + 1));
@@ -54,88 +54,88 @@ public class logicaJuego {
                 System.out.println("\nEl mazo se ha agotado. Fin del juego.");
                 juegoAcabado = true;
             }
-                boolean cartaJugada = false;
-                while (!cartaJugada) {
-                    System.out.println("\n1. Jugar Carta");
-                    System.out.println("2. Robar Carta (Solo se puede usar si no tienes cartas jugables)");
-                    System.out.print("Elige una opción: ");
-                    int opcion = scanner.nextInt();
-                    limpiarPantalla();
-                        switch (opcion) {
-                            case 1:
-                                if (!hayCartaJugable(manoJugador)) {
-                                    System.out.println("\nNo tienes cartas jugables, roba una carta");
-                                    System.out.println("Este es tu mazo actual");
-                                    mostrarCartas(manoJugador);
-                                } else {
-                                    tablero.mostrarCartaEnJuego();
-                                    mostrarCartasConIndices(manoJugador);
-                                    System.out.print("Selecciona el índice de la carta que quieres tirar: ");
-                                    try {
-                                        int indice = scanner.nextInt();
-                                        scanner.nextLine(); // Limpiar buffer
+            boolean cartaJugada = false;
+            while (!cartaJugada) {
+                System.out.println("\n1. Jugar Carta");
+                System.out.println("2. Robar Carta (Solo se puede usar si no tienes cartas jugables)");
+                System.out.print("Elige una opción: ");
+                int opcion = scanner.nextInt();
+                limpiarPantalla();
+                switch (opcion) {
+                    case 1:
+                        if (!hayCartaJugable(manoJugador)) {
+                            System.out.println("\nNo tienes cartas jugables, roba una carta");
+                            System.out.println("Este es tu mazo actual");
+                            mostrarCartas(manoJugador);
+                        } else {
+                            tablero.mostrarCartaEnJuego();
+                            mostrarCartasConIndices(manoJugador);
+                            System.out.print("Selecciona el índice de la carta que quieres tirar: ");
+                            try {
+                                int indice = scanner.nextInt();
+                                scanner.nextLine(); // Limpiar buffer
 
-                                        if (indice >= 0 && indice < manoJugador.getCartas().size()) {
-                                            Carta seleccionada = manoJugador.getCartas().get(indice);
+                                if (indice >= 0 && indice < manoJugador.getCartas().size()) {
+                                    Carta seleccionada = manoJugador.getCartas().get(indice);
 
-                                            if (esCartaJugable(seleccionada)) {
-                                                tablero.setCartaEnJuego(seleccionada);
-                                                manoJugador.getCartas().remove(indice);
-                                                System.out.println("Tiraste: " + seleccionada);
+                                    if (esCartaJugable(seleccionada)) {
+                                        tablero.setCartaEnJuego(seleccionada);
+                                        manoJugador.getCartas().remove(indice);
+                                        System.out.println("Tiraste: " + seleccionada);
 
-                                                // Manejar cartas especiales
-                                                if (seleccionada.esEspecial()) {
-                                                    manejarCartaEspecial(seleccionada);
-                                                }
-                                                if (jugador.tieneUnaCarta()) {
-                                                    System.out.println("UNO!");
-                                                }
-                                                if (jugador.sinCartas()) {
-                                                    System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
-                                                    return;
-                                                }
-                                                cartaJugada = true;
-                                            } else {
-                                                System.out.println("Índice inválido.");
-                                            }
-                                        } else {
-                                            System.out.println("Índice inválido.");
+                                        // Manejar cartas especiales
+                                        if (seleccionada.esEspecial()) {
+                                            manejarCartaEspecial(seleccionada);
                                         }
-                                    } catch (Exception e) {
-                                        System.out.println("Entrada inválida. Introduce un número.");
-                                        scanner.nextLine(); // Limpiar buffer
+                                        if (jugador.tieneUnaCarta()) {
+                                            System.out.println("UNO!");
+                                        }
+                                        if (jugador.sinCartas()) {
+                                            System.out.println("\n¡El Jugador " + (turnoActual + 1) + " ha ganado!");
+                                            return;
+                                        }
+                                        cartaJugada = true;
+                                    } else {
+                                        System.out.println("Índice inválido.");
                                     }
-                                }
-                                break;
-
-                            case 2:
-                                if (!hayCartaJugable(manoJugador)) {
-                                    robarHastaQueSePuedaJugar(manoJugador);
-                                    cartaJugada = true;
                                 } else {
-                                    System.out.println("Aún tienes cartas jugables. No puedes robar.");
+                                    System.out.println("Índice inválido.");
                                 }
-                                break;
-                            case 42:
-                                System.out.println("SALTO DE TURNO");
-                                break;
-                            default:
-                                System.out.println("Opción inválida.");
+                            } catch (Exception e) {
+                                System.out.println("Entrada inválida. Introduce un número.");
+                                scanner.nextLine(); // Limpiar buffer
+                            }
                         }
-                    }
-                    avanzarTurno();
-                    esperarTrasTurno();
+                        break;
+
+                    case 2:
+                        if (!hayCartaJugable(manoJugador)) {
+                            robarHastaQueSePuedaJugar(manoJugador);
+                            cartaJugada = true;
+                        } else {
+                            System.out.println("Aún tienes cartas jugables. No puedes robar.");
+                        }
+                        break;
+                    case 42:
+                        System.out.println("SALTO DE TURNO");
+                        break;
+                    default:
+                        System.out.println("Opción inválida.");
                 }
+            }
+            avanzarTurno();
+            esperarTrasTurno();
+        }
     }
 
-    private void mostrarCartasConIndices(mano manoJugador) {
+    private void mostrarCartasConIndices(Mano manoJugador) {
         int i = 0;
         for (Carta carta : manoJugador.getCartas()) {
             System.out.println(i + ": " + carta);
             i++;
         }
     }
-    private void mostrarCartas(mano manoJugador) {
+    private void mostrarCartas(Mano manoJugador) {
         for (Carta carta : manoJugador.getCartas()) {
             System.out.println(carta);
         }
@@ -155,14 +155,11 @@ public class logicaJuego {
                 (carta.esEspecial() && carta.getTipoEspecial().equals(actual.getTipoEspecial()));
     }
 
-    private boolean hayCartaJugable(mano manoJugador) {
-        for (Carta carta : manoJugador.getCartas()) {
-            if (esCartaJugable(carta)) return true;
-        }
-        return false;
+    private boolean hayCartaJugable(Mano manoJugador) {
+        return manoJugador.getCartas().stream().anyMatch(this::esCartaJugable);
     }
 
-    private void robarHastaQueSePuedaJugar(mano manoJugador) {
+    private void robarHastaQueSePuedaJugar(Mano manoJugador) {
         boolean seEncontroCarta = false;
         while (!seEncontroCarta) {
             try {
@@ -268,7 +265,7 @@ public class logicaJuego {
             System.out.println("1. Rojo \uD83D\uDD34");
             System.out.println("2. Verde \uD83D\uDFE9");
             System.out.println("3. Azul \uD83D\uDD35");
-            System.out.println("4. Amarillo \uD83D\uDD36");
+            System.out.println("4. Amarillo \uD83D\uDC9B");
 
             // Validar entrada
             while (!entradaValida) {
@@ -283,7 +280,7 @@ public class logicaJuego {
                             case 1: nuevoColor = "\uD83D\uDD34"; break;
                             case 2: nuevoColor = "\uD83D\uDFE9"; break;
                             case 3: nuevoColor = "\uD83D\uDD35"; break;
-                            case 4: nuevoColor = "\uD83D\uDD36"; break;
+                            case 4: nuevoColor = "\uD83D\uDC9B"; break;
                         }
                         carta.setColor(nuevoColor);
                         System.out.println("El nuevo color es: " + nuevoColor);
