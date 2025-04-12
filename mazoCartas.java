@@ -4,7 +4,7 @@ import java.util.List;
 
 public class mazoCartas {
     private List<Carta> cartas;
-    private static final String[] colores = {"\uD83D\uDD34", "\uD83D\uDFE9", "\uD83D\uDD35", "\uD83D\uDD36"};
+    private String[] colores = {"\uD83D\uDD34", "\uD83D\uDFE9", "\uD83D\uDD35", "\uD83D\uDD36"};
 
     public mazoCartas() {
         cartas = new ArrayList<>();
