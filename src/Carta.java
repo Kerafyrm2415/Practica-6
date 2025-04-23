@@ -38,7 +38,6 @@ public class Carta {
     }
 
     public String getNombreArchivo() {
-        System.out.println(color + valor);
         return color.toLowerCase() + valor + ".jpg";
     }
 

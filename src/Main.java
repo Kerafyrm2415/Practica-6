@@ -34,7 +34,7 @@ public class Main {
             opcionJugar = sc.nextInt();
         }
         if (opcionJugar == 1) {
-            System.out.println("Ingrese el numero de Jugador");
+            System.out.println("Ingrese el numero de jugadores");
             numJugadores = sc.nextInt();
             // Verificamos si hay al menos 2 Jugador
             while (numJugadores < 2) {

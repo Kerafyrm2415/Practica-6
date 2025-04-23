@@ -16,6 +16,8 @@ public class logicaJuego {
     boolean juegoAcabado = false;
     private int direccionTurno = 1; // 1 para adelante, -1 para atrás (por el efecto de "Reversa")
     private boolean saltoTurno = false; // Para cartas de "Salto"
+    private JFrame frameImagen = null;
+    private JLabel labelImagen = null;
 
     public logicaJuego(int numJugadores) {
         mazo = new mazoCartas();
@@ -43,7 +45,7 @@ public class logicaJuego {
         while (!juegoAcabado) {
             Jugador jugador = jugadoresList.get(turnoActual);
             Mano manoJugador = jugador.getMano();
-
+            String nombreArchivo = tablero.getCartaEnJuego().getNombreArchivo();
             System.out.println("\n--------------------------------");
             System.out.println("Turno del Jugador " + (turnoActual + 1));
             tablero.mostrarCartaEnJuego();
@@ -58,10 +60,12 @@ public class logicaJuego {
                 juegoAcabado = true;
             }
             boolean cartaJugada = false;
+            mostrarCartaComoImagen(nombreArchivo);
             while (!cartaJugada) {
                 System.out.println("\n1. Jugar Carta");
                 System.out.println("2. Robar Carta (Solo se puede usar si no tienes cartas jugables)");
-                System.out.println("3. Mostrar Carta del mazo");
+                System.out.println("3. Revisar tu mano de cartas");
+                System.out.println("4. Mostrar Carta del mazo");
                 System.out.print("Elige una opción: ");
                 int opcion = scanner.nextInt();
                 limpiarPantalla();
@@ -99,6 +103,7 @@ public class logicaJuego {
                                             return;
                                         }
                                         cartaJugada = true;
+                                        mostrarCartaComoImagen(nombreArchivo);
                                     } else {
                                         System.out.println("Índice inválido.");
                                     }
@@ -116,20 +121,24 @@ public class logicaJuego {
                         if (!hayCartaJugable(manoJugador)) {
                             robarHastaQueSePuedaJugar(manoJugador);
                             cartaJugada = true;
+                            mostrarCartaComoImagen(nombreArchivo);
                         } else {
                             System.out.println("Aún tienes cartas jugables. No puedes robar.");
                         }
                         break;
                     case 3:
+                        mostrarCartas(manoJugador);
+                        break;
+                    case 4:
                         tablero.mostrarCartaEnJuego();
-                        String nombreArchivo = tablero.getCartaEnJuego().getNombreArchivo(); // Asegúrate que Carta tenga este método
                         mostrarCartaComoImagen(nombreArchivo);
                         break;
-                    case 42:
+                    case 99:
                         System.out.println("SALTO DE TURNO");
-                        break;
+
                     default:
                         System.out.println("Opción inválida.");
+
                 }
             }
             avanzarTurno();
@@ -317,12 +326,18 @@ public class logicaJuego {
 
             // Cargar y mostrar la imagen
             ImageIcon icon = new ImageIcon(imageFile.getAbsolutePath());
-            JFrame frame = new JFrame("Carta Actual");
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.add(new JLabel(icon));
-            frame.pack();
-            frame.setLocationRelativeTo(null); // Centrar en pantalla
-            frame.setVisible(true);
+            if (frameImagen == null) {
+                frameImagen = new JFrame("Carta Actual");
+                frameImagen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                labelImagen = new JLabel(icon);
+                frameImagen.add(labelImagen);
+                frameImagen.pack();
+                frameImagen.setLocationRelativeTo(null);
+                frameImagen.setVisible(true);
+            } else {
+                labelImagen.setIcon(icon);
+                frameImagen.pack(); // Ajustar tamaño si cambia la imagen
+            }
 
         } catch (Exception e) {
             System.err.println("Error al mostrar imagen: " + e.getMessage());
