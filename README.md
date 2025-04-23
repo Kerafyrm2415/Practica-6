@@ -27,5 +27,6 @@ tendrá el control y con la cual se jugará el juego.
 
 # Consideraciones
 
-Todo este codigo lo realizó una sola persona, aunque en diferentes dispositivos (Dos diferentes laptops y una computadora de escritorio en la que se realizó este codigo)
+Todo este codigo lo realizó una sola persona, aunque en diferentes dispositivos (Dos diferentes laptops y una computadora de escritorio en la que se realizó este codigo).
+
 Asimismo, se recomienda revisar el historial de commits, debido a que varios de estos codigos se tuvieron que borrar y volver a poner debido al cambio en el formato (antes se ponian todos los codigos en el github, y cuando se pusieron las imagenes decidí dividirlos en carpetas).
