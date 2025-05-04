@@ -1,4 +1,4 @@
-# Practica-6
+# Practica-4
 # OBJETIVO (COMPETENCIA)
 Analizar, diseñar e implementar una aplicación que se comunique con el usuario mediante una interface
 de usuario gráfica, integrando algunas clases previamente implementadas en bibliotecas, gráficas que
